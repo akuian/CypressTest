@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Student;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -16,9 +17,9 @@ class StudentController extends Controller
     public function index()
     {
         //
-        $student = Student::all();
+        $student = DB::table('student')->paginate(3);
         $paginate = Student::orderBy('id_student','asc')->paginate(3);
-        return view('student.index', ['student' => $student,'paginate'=>$paginate]);
+        return view('student.index', ['student'=>$student],['paginate'=>$paginate]);
     }
 
     /**
@@ -31,6 +32,11 @@ class StudentController extends Controller
         return view('student.create');
     }
 
+    public function search(Request $request){
+        $search = $request->search;
+        $student = Student::where('name','like','%'.$search.'%')->paginate();
+        return view('student.index', ['student' => $student]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -44,6 +50,8 @@ class StudentController extends Controller
             'Name'=> 'required',
             'Class'=> 'required',
             'Major' => 'required',
+            'Address' => 'required',
+            'date_of_birth' => 'required'
         ]);
 
         //eloquent function to add data
@@ -78,6 +86,7 @@ class StudentController extends Controller
         //displays detail data by finding on Student nim
         $Student = Student::where('nim',$nim)->first();
         return view('student.edit', compact('Student'));
+        return redirect()->route('student.index');
     }
 
     /**
@@ -95,6 +104,8 @@ class StudentController extends Controller
             'Name'=> 'required',
             'Class'=> 'required',
             'Major'=> 'required',
+            'Address' => 'required',
+            'date_of_birth' => 'required'
         ]);
 
         //Eloquent function to update the data
@@ -104,6 +115,8 @@ class StudentController extends Controller
             'name'=>$request->Name,
             'class'=>$request->Class,
             'major'=>$request->Major,
+            'address'=>$request->Address,
+            'date_of_birth'=>$request->date_of_birth
         ]);
         return redirect()->route('student.index')
         ->with('success', 'Student Successfully Updated');

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/student/search', [StudentController::class, 'search']);
 Route::resource('student', StudentController::class);
 Route::get('/', function () {
     return view('welcome');
