@@ -1,5 +1,12 @@
 @extends('student.layout')
 @section('content')
+<style type="text/css">
+		.pagination li{
+			float: left;
+			list-style-type: none;
+			margin:5px;
+		}
+	</style>
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left mt-2">
@@ -50,4 +57,5 @@
     </tr>
     @endforeach
 </table>
+{{ $student->render(); }}
 @endsection
