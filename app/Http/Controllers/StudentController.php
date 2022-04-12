@@ -87,6 +87,12 @@ class StudentController extends Controller
         return view('student.detail', ['Student'=> $Student]);
     }
 
+    public function test($nim)
+    {
+        $Student = Student::with('course')->where('nim', $nim)->first();
+        return view('student.grade', ['Student'=> $Student]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -49,6 +49,7 @@
             <form action="{{ route('student.destroy',['student'=>$mhs->nim]) }}" method="POST">
                 <a class="btn btn-info" href="{{ route('student.show',$mhs->nim) }}">Show</a>
                 <a class="btn btn-primary" href="{{ route('student.edit',$mhs->nim) }}">Edit</a>
+                <a class="btn btn-warning" href="{{ route('student.test',$mhs->nim) }}">Grade</a>
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -57,5 +58,5 @@
     </tr>
     @endforeach
 </table>
-
+{{ $paginate->links()}}
 @endsection
