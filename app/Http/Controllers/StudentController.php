@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\ClassModel;
 
 class StudentController extends Controller
 {
@@ -17,9 +18,9 @@ class StudentController extends Controller
     public function index()
     {
         //
-        $student = DB::table('student')->paginate(3);
+        $student = Student::with('class')->get();
         $paginate = Student::orderBy('id_student','asc')->paginate(3);
-        return view('student.index', ['student'=>$student],['paginate'=>$paginate]);
+        return view('student.index', ['student'=>$student,'paginate'=>$paginate]);
     }
 
     /**
@@ -29,7 +30,8 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('student.create');
+        $class = ClassModel::all(); //get data from class table
+        return view('student.create', ['class' => $class]);
     }
 
     public function search(Request $request){
@@ -54,9 +56,19 @@ class StudentController extends Controller
             'date_of_birth' => 'required'
         ]);
 
-        //eloquent function to add data
-        Student::create($request->all());
+        $student = new Student;
+        $student -> nim = $request->get('Nim');
+        $student -> name = $request->get('Name');
+        $student -> major = $request->get('Major');
+        $student -> address = $request->get('Address');
+        $student -> date_of_birth = $request->get('date_of_birth');
+        $student -> save();
 
+        $class = new ClassModel;
+        $class->id = $request->get('Class');
+        //eloquent function to add data
+        $student->class()->associate($class);
+        $student->save();
         //if the date is added succesfully, returned to the main page
         return redirect()->route('student.index')
         ->with('success','Student Succesfully Added');
@@ -71,8 +83,8 @@ class StudentController extends Controller
     public function show($nim)
     {
         //displays detailed data by finding/ by Student Nim
-        $Student = Student::where('nim',$nim)->first();
-        return view('student.detail', compact('Student'));
+        $Student = Student::with('class')->where('nim', $nim)->first();
+        return view('student.detail', ['Student'=> $Student]);
     }
 
     /**
@@ -84,8 +96,9 @@ class StudentController extends Controller
     public function edit($nim)
     {
         //displays detail data by finding on Student nim
-        $Student = Student::where('nim',$nim)->first();
-        return view('student.edit', compact('Student'));
+        $Student = Student::with('class')->where('nim', $nim)->first();
+        $class=classModel::all();
+        return view('student.edit', compact('Student','class'));
         return redirect()->route('student.index');
     }
 
@@ -109,15 +122,20 @@ class StudentController extends Controller
         ]);
 
         //Eloquent function to update the data
-        Student::where('nim',$nim)
-        ->update([
-            'nim'=>$request->Nim,
-            'name'=>$request->Name,
-            'class'=>$request->Class,
-            'major'=>$request->Major,
-            'address'=>$request->Address,
-            'date_of_birth'=>$request->date_of_birth
-        ]);
+        $student = Student::with('class')->where('nim', $nim)->first();
+        $student -> nim = $request->get('Nim');
+        $student -> name = $request->get('Name');
+        $student -> major = $request->get('Major');
+        $student -> address = $request->get('Address');
+        $student -> date_of_birth = $request->get('date_of_birth');
+        $student -> save();
+
+        $class = new ClassModel;
+        $class->id = $request->get('Class');
+
+        $student->class()->associate($class);
+        $student->save();
+
         return redirect()->route('student.index')
         ->with('success', 'Student Successfully Updated');
     }
