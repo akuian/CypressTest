@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ArticleController;
 use Illuminate\Http\Request;
 
 /*
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::resource('articles',ArticleController::class);
 Route::get('/student/search', [StudentController::class, 'search']);
 Route::resource('student', StudentController::class);
 Route::get('/', function () {
