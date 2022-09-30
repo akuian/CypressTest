@@ -157,6 +157,6 @@ class StudentController extends Controller
         //Eloquent function to delete the data
         Student::where('nim',$nim)->delete();
         return redirect()->route('student.index')
-        -> with('success'.'Student Successfully Deleted');
+        -> with('success' . 'Student Succesfully Deleted');
     }
 }

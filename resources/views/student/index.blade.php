@@ -13,7 +13,7 @@
             <h2>INFORMATION TECHNOLOGY-STATE POLYTECHNIC OF MALANG</h2>
         </div>
         <div class="float-right my-2">
-            <a class="btn btn-success" href="{{ route('student.create') }}"> Input Student Data</a>
+            <a id="inputStudent" class="btn btn-success" href="{{ route('student.create') }}"> Input Student Data</a>
         </div>
     </div>
 </div>
@@ -52,7 +52,7 @@
                 <a class="btn btn-warning" href="">Grade</a>
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger">Delete</button>
+                <button id='deleteButton' type="submit" class="btn btn-danger">Delete</button>
             </form>
         </td>
     </tr>
